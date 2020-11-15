@@ -8,12 +8,15 @@ import argparse
 
 
 EPS = list(np.arange(0.01, 0.1, 0.01)) + list(np.arange(0.1, 1, 0.1))
-EPSILONS = [0.01, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0, 50.0, 100.0, 500.0, 1000.0]
+# EPSILONS = [0.01, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0, 50.0, 100.0, 500.0, 1000.0]
 PERTURBATION = 'grad_pert_'
-DP = ['dp_', 'adv_cmp_', 'zcdp_', 'rdp_']
+# DP = ['dp_', 'adv_cmp_', 'zcdp_', 'rdp_']
 TYPE = ['o-', '.-', '^-', '--']
 DP_LABELS = ['NC', 'AC', 'zCDP', 'RDP']
 RUNS = range(5)
+
+DP = ['dp_']
+EPSILONS = [0.1]
 
 plt.rcParams["font.family"] = "Times New Roman"
 plt.rcParams.update({'font.size': 15})
@@ -41,7 +44,9 @@ def pretty_position(X, Y, pos):
 
 
 def plot_advantage(result):
-	train_acc, baseline_acc, train_loss, membership, _, shokri_mem_confidence, _, per_instance_loss, _, per_instance_loss_all, _ = pickle.load(open(DATA_PATH+MODEL+'no_privacy_'+str(args.l2_ratio)+'.p', 'rb'))
+	train_acc, baseline_acc, train_loss, membership, _, per_instance_loss, _ = pickle.load(open(DATA_PATH+MODEL+'no_privacy_'+str(args.l2_ratio)+'.p', 'rb'))
+	# train_acc, baseline_acc, train_loss, membership, _, shokri_mem_confidence, _, per_instance_loss, _, per_instance_loss_all, _ = pickle.load(
+	# 	open(DATA_PATH + MODEL + 'no_privacy_' + str(args.l2_ratio) + '.p', 'rb'))
 	print(train_acc, baseline_acc)
 	color = 0.1
 	y = dict()
@@ -51,11 +56,12 @@ def plot_advantage(result):
 		for eps in EPSILONS:
 			test_acc_d, yeom_mem_adv_d, yeom_attr_adv_d, shokri_mem_adv_d = [], [], [], []
 			for run in RUNS:
-				train_acc, test_acc, train_loss, membership, shokri_mem_adv, shokri_mem_confidence, yeom_mem_adv, per_instance_loss, yeom_attr_adv, per_instance_loss, features = result[dp][eps][run]
+				train_acc, test_acc, train_loss, membership, yeom_mem_adv, per_instance_loss, features = result[dp][eps][run]
+				# train_acc, test_acc, train_loss, membership, shokri_mem_adv, shokri_mem_confidence, yeom_mem_adv, per_instance_loss, yeom_attr_adv, per_instance_loss, features = result[dp][eps][run]
 				test_acc_d.append(test_acc)
 				yeom_mem_adv_d.append(yeom_mem_adv) # adversary's advantage using membership inference attack of Yeom et al.
-				shokri_mem_adv_d.append(shokri_mem_adv) # adversary's advantage using membership inference attack of Shokri et al.
-				yeom_attr_adv_d.append(np.mean(yeom_attr_adv)) # adversary's advantage using attribute inference attack of Yeom et al.
+				# shokri_mem_adv_d.append(shokri_mem_adv) # adversary's advantage using membership inference attack of Shokri et al.
+				# yeom_attr_adv_d.append(np.mean(yeom_attr_adv)) # adversary's advantage using attribute inference attack of Yeom et al.
 			test_acc_mean.append(np.mean(test_acc_d))
 			test_acc_std.append(np.std(test_acc_d))
 			yeom_mem_adv_mean.append(np.mean(yeom_mem_adv_d))
@@ -102,10 +108,10 @@ def plot_advantage(result):
 		plt.yticks(np.arange(0, 0.26, step=0.05))
 		plt.ylabel('Privacy Leakage')
 
-	plt.annotate("RDP", pretty_position(EPSILONS, y["rdp_"], 8), textcoords="offset points", xytext=(-10, 0), ha='right')
-	plt.annotate("zCDP", pretty_position(EPSILONS, y["zcdp_"], 7), textcoords="offset points", xytext=(8, 12), ha='right')
-	plt.annotate("AC", pretty_position(EPSILONS, y["adv_cmp_"], -4), textcoords="offset points", xytext=(0, -10), ha='left')
-	plt.annotate("NC", pretty_position(EPSILONS, y["dp_"], -4), textcoords="offset points", xytext=(-10, 0), ha='right')
+	# plt.annotate("RDP", pretty_position(EPSILONS, y["rdp_"], 8), textcoords="offset points", xytext=(-10, 0), ha='right')
+	# plt.annotate("zCDP", pretty_position(EPSILONS, y["zcdp_"], 7), textcoords="offset points", xytext=(8, 12), ha='right')
+	# plt.annotate("AC", pretty_position(EPSILONS, y["adv_cmp_"], -4), textcoords="offset points", xytext=(0, -10), ha='left')
+	# plt.annotate("NC", pretty_position(EPSILONS, y["dp_"], -4), textcoords="offset points", xytext=(-10, 0), ha='right')
 
 	plt.show()
 
@@ -257,7 +263,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	print(vars(args))
 
-	DATA_PATH = '../results/' + str(args.dataset) + '/'
+	DATA_PATH = 'results/' + str(args.dataset) + '/'
 	MODEL = str(args.model) + '_'
 
 	result = get_data()
