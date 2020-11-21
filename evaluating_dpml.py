@@ -94,7 +94,7 @@ if __name__ == '__main__':
     parser.add_argument('--target_epsilon', type=float, default=0.5)
     parser.add_argument('--target_delta', type=float, default=1e-5)
     # attack model configuration
-    parser.add_argument('--attack_model', type=str, default='nn')
+    parser.add_argument('--attack_model', type=str, default='softmax')
     parser.add_argument('--attack_learning_rate', type=float, default=0.01)
     parser.add_argument('--attack_batch_size', type=int, default=100)
     parser.add_argument('--attack_n_hidden', type=int, default=64)
