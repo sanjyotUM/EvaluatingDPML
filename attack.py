@@ -4,9 +4,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_curve
 from scipy import stats
 import numpy as np
-import tensorflow as tf
-import argparse
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import tensorflow as tf
+tf.get_logger().setLevel('ERROR')
+import argparse
 import pickle
 
 MODEL_PATH = 'model/'
