@@ -1,11 +1,14 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 from sklearn.metrics import classification_report, accuracy_score
 from tensorflow_privacy.privacy.analysis.rdp_accountant import compute_rdp
 from tensorflow_privacy.privacy.analysis.rdp_accountant import get_privacy_spent
 from tensorflow_privacy.privacy.optimizers import dp_optimizer
 from constants import rdp_noise_multiplier, gdp_noise_multiplier
 import tensorflow as tf
+tf.get_logger().setLevel('ERROR')
 import numpy as np
-import os
 
 LOGGING = False # enables tf.train.ProfilerHook (see use below)
 LOG_DIR = 'log'
@@ -44,6 +47,26 @@ def get_model(features, labels, mode, params):
         y = tf.keras.layers.Dense(n_hidden, activation=non_linearity, kernel_regularizer=tf.keras.regularizers.l2(l2_ratio)).apply(y)
         y = tf.keras.layers.Dense(n_hidden, activation=non_linearity, kernel_regularizer=tf.keras.regularizers.l2(l2_ratio)).apply(y)
         logits = tf.keras.layers.Dense(n_out, activation=tf.nn.softmax, kernel_regularizer=tf.keras.regularizers.l2(l2_ratio)).apply(y)
+
+    elif model == 'robust_nn':
+        hidden_1 = 50
+        dropout_1 = 0.5
+        hidden_2 = 50
+        dropout_2 = 0.5
+
+        input_layer = tf.reshape(features['x'], [-1, n_in])
+        y = tf.keras.layers.Dense(hidden_1, activation=non_linearity,
+                                  kernel_regularizer=tf.keras.regularizers.l2(l2_ratio)).apply(input_layer)
+
+        y = tf.keras.layers.Dropout(dropout_1).apply(y)
+
+        y = tf.keras.layers.Dense(hidden_2, activation=non_linearity,
+                                  kernel_regularizer=tf.keras.regularizers.l2(l2_ratio)).apply(y)
+
+        y = tf.keras.layers.Dropout(dropout_2).apply(y)
+
+        logits = tf.keras.layers.Dense(n_out, activation=tf.nn.softmax,
+                                       kernel_regularizer=tf.keras.regularizers.l2(l2_ratio)).apply(y)
     else:
         #print('Using softmax regression...')
         input_layer = tf.reshape(features['x'], [-1, n_in])
@@ -113,6 +136,7 @@ def train(dataset, n_hidden=50, batch_size=100, epochs=100, learning_rate=0.01, 
     if batch_size > len(train_y):
         batch_size = len(train_y)
 
+    print(f'Using model {model}')
     classifier = tf.estimator.Estimator(
             model_fn=get_model,
             params = [
