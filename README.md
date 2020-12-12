@@ -1,11 +1,12 @@
 # Evaluating Differentially Private Machine Learning in Practice
 
 
-Code in this repository has been adopted from https://github.com/bargavj/EvaluatingDPML.
+This repository has been adopted from https://github.com/bargavj/EvaluatingDPML.
 
-Implementation of an alternate target model architecture to reduce generalization
+Code to reproduce the original results is present in the directory `reproduction_of_results`. 
+Implementation of the alternate target model architecture to reduce generalization
 gap has been done in the script `classifier.py`. Training, performance comparison,
-and Yeom's membership attack on the proposed as well as the original model have 
+and Yeom's membership attack on the proposed as well as the original model has 
 been presented in `notebooks/explore.ipynb`.
 
 ### Requirements
@@ -18,10 +19,3 @@ been presented in `notebooks/explore.ipynb`.
 
 Pre-processed CIFAR-100 data set has been provided in the `dataset/` folder. Purchase-100 data set can be downloaded from [Kaggle web site](https://www.kaggle.com/c/acquire-valued-shoppers-challenge/data). This can be pre-processed using the preprocess_purchase.py scipt provided in the repository. Alternatively, the files for Purchase-100 data set can be found [here](https://drive.google.com/open?id=1nDDr8OWRaliIrUZcZ-0I8sEB2WqAXdKZ).
 For pre-processing other data sets, bound the L2 norm of each record to 1 and pickle the features and labels separately into `$dataset`_feature.p and `$dataset`_labels.p files in the `dataset/` folder (where `$dataset` is a placeholder for the data set file name, e.g. for Purchase-100 data set, `$dataset` will be purchase_100).
-
-
-
-
-
-
-
