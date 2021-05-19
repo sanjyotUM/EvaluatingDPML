@@ -21,4 +21,4 @@ Pre-processed CIFAR-100 data set has been provided in the `dataset/` folder. Pur
 For pre-processing other data sets, bound the L2 norm of each record to 1 and pickle the features and labels separately into `$dataset`_feature.p and `$dataset`_labels.p files in the `dataset/` folder (where `$dataset` is a placeholder for the data set file name, e.g. for Purchase-100 data set, `$dataset` will be purchase_100).
 
 ### Results
-Successfully improve in foiling Yeom's membership attack as compared to author's original implementation by constructing a more generalized target model. Attack model that was successful in original implementation (Precision = 0.92) was ineffective against the improved target model (Precision = 0.55).
+Successfully improved performance in foiling Yeom's membership attack as compared to author's original implementation by constructing a more generalized target model. Attack model that was successful in original implementation (Precision = 0.92) was ineffective against the improved target model (Precision = 0.55).
